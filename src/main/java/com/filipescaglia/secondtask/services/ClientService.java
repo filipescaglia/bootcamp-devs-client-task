@@ -38,14 +38,18 @@ public class ClientService {
 	}
 	
 	@Transactional
+	public ClientDTO insert(ClientDTO dto) {
+		Client entity = new Client();
+		copyDtoToEntity(dto, entity);
+		entity = repository.save(entity);
+		return new ClientDTO(entity);
+	}
+	
+	@Transactional
 	public ClientDTO update(Long id, ClientDTO dto) {
 		try {
 			Client entity = repository.getOne(id);
-			entity.setBirthDate(dto.getBirthDate());
-			entity.setChildren(dto.getChildren());
-			entity.setCpf(dto.getCpf());
-			entity.setIncome(dto.getIncome());
-			entity.setName(dto.getName());
+			copyDtoToEntity(dto, entity);
 			return new ClientDTO(entity);
 		}
 		catch (EntityNotFoundException e) {
@@ -63,7 +67,14 @@ public class ClientService {
 		catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation");
 		}
-		
+	}
+	
+	private void copyDtoToEntity(ClientDTO dto, Client entity) {
+		entity.setBirthDate(dto.getBirthDate());
+		entity.setChildren(dto.getChildren());
+		entity.setCpf(dto.getCpf());
+		entity.setIncome(dto.getIncome());
+		entity.setName(dto.getName());
 	}
 
 }
