@@ -1,5 +1,7 @@
 package com.filipescaglia.secondtask.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.filipescaglia.secondtask.dto.ClientDTO;
 import com.filipescaglia.secondtask.entities.Client;
 import com.filipescaglia.secondtask.repositories.ClientRepository;
+import com.filipescaglia.secondtask.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ClientService {
@@ -22,6 +25,11 @@ public class ClientService {
 		return list.map(x -> new ClientDTO(x));
 	}
 	
-	
+	@Transactional(readOnly = true)
+	public ClientDTO findById(Long id) {
+		Optional<Client> dto = repository.findById(id);
+		Client entity = dto.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		return new ClientDTO(entity);
+	}
 
 }
