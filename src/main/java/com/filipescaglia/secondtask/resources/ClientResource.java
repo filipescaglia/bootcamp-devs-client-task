@@ -40,11 +40,12 @@ public class ClientResource {
 	public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
 		ClientDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
-	}
+	}	
 	
-	/*
-	 * @DeleteMapping public ResponseEntity<ClientDTO> delete(@PathVariable Long id)
-	 * { service.delete(id); return ResponseEntity.noContent().build(); }
-	 */
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<ClientDTO> delete(@PathVariable Long id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}	
 
 }
